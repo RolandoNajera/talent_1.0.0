@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -17,141 +19,180 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Ability {
 
 	@Id
-	@GenericGenerator(name = "genHability", strategy = "increment")
-	@GeneratedValue(generator = "genHability")
-	@Column(name = "nb_idAbility")
-	private Integer nbIdAbility;
+	@GenericGenerator(name = "genAbility", strategy = "increment")
+	@GeneratedValue(generator = "genAbility")
+	@Column(name = "id")
+	private Integer id;
 
-	@Column(name = "tx_name")
-	private String txName;
+	@Column(name = "name")
+	private String name;
 
-	@Column(name = "tx_type")
-	private String txType;
+	@Column(name = "description")
+	private String description;
 
-	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
-	@Type(type = "timestamp")
-	@Column(name = "dt_creationDate", nullable = false)
-	private Date dtCreationDate;
+	@Column(name = "type")
+	private String type;
 
 	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
 	@Type(type = "timestamp")
-	@Column(name = "dt_updateDate")
-	private Date dtUpdateDate;
+	@Column(name = "creationDate", nullable = false)
+	private Date creationDate;
 
-	@Column(name = "nb_status", nullable = false)
-	private Integer nbStatus;
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
+	@Type(type = "timestamp")
+	@Column(name = "updateDate")
+	private Date updateDate;
+
+	@Column(name = "status", nullable = false)
+	private Integer status;
+
+	@ManyToOne
+	@JoinColumn(name = "id")
+	private Profile profile;
 
 	public Ability() {
 		super();
 	}
 
 	/**
-	 * @param nbIdHability
-	 * @param txName
-	 * @param txType
-	 * @param dtCreationDate
-	 * @param dtUpdateDate
-	 * @param nbStatus
+	 * @param id
+	 * @param name
+	 * @param description
+	 * @param type
+	 * @param creationDate
+	 * @param updateDate
+	 * @param status
 	 */
-	public Ability(Integer nbIdAbility, String txName, String txType, Date dtCreationDate, Date dtUpdateDate,
-			Integer nbStatus) {
+	public Ability(Integer id, String name, String description, String type, Date creationDate, Date updateDate,
+			Integer status) {
 		super();
-		this.nbIdAbility = nbIdAbility;
-		this.txName = txName;
-		this.txType = txType;
-		this.dtCreationDate = dtCreationDate;
-		this.dtUpdateDate = dtUpdateDate;
-		this.nbStatus = nbStatus;
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.type = type;
+		this.creationDate = creationDate;
+		this.updateDate = updateDate;
+		this.status = status;
 	}
 
 	/**
-	 * @return the nbIdAbility
+	 * @return the id
 	 */
-	public Integer getNbIdAbility() {
-		return nbIdAbility;
+	public Integer getId() {
+		return id;
 	}
 
 	/**
-	 * @param nbIdAbility
-	 *            the nbIdAbility to set
+	 * @param id
+	 *            the id to set
 	 */
-	public void setNbIdAbility(Integer nbIdAbility) {
-		this.nbIdAbility = nbIdAbility;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
-	 * @return the txName
+	 * @return the name
 	 */
-	public String getTxName() {
-		return txName;
+	public String getName() {
+		return name;
 	}
 
 	/**
-	 * @param txName
-	 *            the txName to set
+	 * @param name
+	 *            the name to set
 	 */
-	public void setTxName(String txName) {
-		this.txName = txName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
-	 * @return the txType
+	 * @return the description
 	 */
-	public String getTxType() {
-		return txType;
+	public String getDescription() {
+		return description;
 	}
 
 	/**
-	 * @param txType
-	 *            the txType to set
+	 * @param description
+	 *            the description to set
 	 */
-	public void setTxType(String txType) {
-		this.txType = txType;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	/**
-	 * @return the dtCreationDate
+	 * @return the type
 	 */
-	public Date getDtCreationDate() {
-		return dtCreationDate;
+	public String getType() {
+		return type;
 	}
 
 	/**
-	 * @param dtCreationDate
-	 *            the dtCreationDate to set
+	 * @param type
+	 *            the type to set
 	 */
-	public void setDtCreationDate(Date dtCreationDate) {
-		this.dtCreationDate = dtCreationDate;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	/**
-	 * @return the dtUpdateDate
+	 * @return the creationDate
 	 */
-	public Date getDtUpdateDate() {
-		return dtUpdateDate;
+	public Date getCreationDate() {
+		return creationDate;
 	}
 
 	/**
-	 * @param dtUpdateDate
-	 *            the dtUpdateDate to set
+	 * @param creationDate
+	 *            the creationDate to set
 	 */
-	public void setDtUpdateDate(Date dtUpdateDate) {
-		this.dtUpdateDate = dtUpdateDate;
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 
 	/**
-	 * @return the nbStatus
+	 * @return the updateDate
 	 */
-	public Integer getNbStatus() {
-		return nbStatus;
+	public Date getUpdateDate() {
+		return updateDate;
 	}
 
 	/**
-	 * @param nbStatus
-	 *            the nbStatus to set
+	 * @param updateDate
+	 *            the updateDate to set
 	 */
-	public void setNbStatus(Integer nbStatus) {
-		this.nbStatus = nbStatus;
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public Integer getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status
+	 *            the status to set
+	 */
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return the profile
+	 */
+	public Profile getProfile() {
+		return profile;
+	}
+
+	/**
+	 * @param profile
+	 *            the profile to set
+	 */
+	public void setProfile(Profile profile) {
+		this.profile = profile;
 	}
 
 }

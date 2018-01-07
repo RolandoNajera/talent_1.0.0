@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -13,189 +15,208 @@ import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@Table(name = "Cat_Experience")
+@Table(name = "Experience")
 public class Experience {
 
 	@Id
 	@GenericGenerator(name = "genExperience", strategy = "increment")
 	@GeneratedValue(generator = "genExperience")
-	@Column(name = "nb_idExperience")
-	private Integer nbIdExperience;
+	@Column(name = "id")
+	private Integer idExperience;
 
-	@Column(name = "tx_company")
-	private String txCompany;
+	@Column(name = "company")
+	private String company;
 
-	@Column(name = "tx_project")
-	private String txProject;
-
-	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
-	@Type(type = "timestamp")
-	@Column(name = "dt_startDate", nullable = false)
-	private Date dtStartDate;
+	@Column(name = "project")
+	private String project;
 
 	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
 	@Type(type = "timestamp")
-	@Column(name = "dt_endDate", nullable = false)
-	private Date dtEndDate;
+	@Column(name = "startDate", nullable = false)
+	private Date startDate;
 
 	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
 	@Type(type = "timestamp")
-	@Column(name = "dt_creationDate", nullable = false)
-	private Date dtCreationDate;
+	@Column(name = "endDate", nullable = false)
+	private Date endDate;
 
 	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
 	@Type(type = "timestamp")
-	@Column(name = "dt_updateDate")
-	private Date dtUpdateDate;
+	@Column(name = "creationDate", nullable = false)
+	private Date creationDate;
 
-	@Column(name = "nb_status", nullable = false)
-	private Integer nbStatus;
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
+	@Type(type = "timestamp")
+	@Column(name = "updateDate")
+	private Date updateDate;
+
+	@Column(name = "status", nullable = false)
+	private Integer status;
+
+	@ManyToOne
+	@JoinColumn(name = "id")
+	private Profile profile;
 
 	public Experience() {
 		super();
 	}
 
 	/**
-	 * @param nbIdExperience
-	 * @param txCompany
-	 * @param txProject
-	 * @param dtStartDate
-	 * @param dtEndDate
-	 * @param dtCreationDate
-	 * @param dtUpdateDate
-	 * @param nbStatus
+	 * @param idExperience
+	 * @param company
+	 * @param project
+	 * @param startDate
+	 * @param endDate
+	 * @param creationDate
+	 * @param updateDate
+	 * @param status
 	 */
-	public Experience(Integer nbIdExperience, String txCompany, String txProject, Date dtStartDate, Date dtEndDate,
-			Date dtCreationDate, Date dtUpdateDate, Integer nbStatus, String stIdExperience) {
+	public Experience(Integer idExperience, String company, String project, Date startDate, Date endDate,
+			Date creationDate, Date updateDate, Integer status) {
 		super();
-		this.nbIdExperience = nbIdExperience;
-		this.txCompany = txCompany;
-		this.txProject = txProject;
-		this.dtStartDate = dtStartDate;
-		this.dtEndDate = dtEndDate;
-		this.dtCreationDate = dtCreationDate;
-		this.dtUpdateDate = dtUpdateDate;
-		this.nbStatus = nbStatus;
+		this.idExperience = idExperience;
+		this.company = company;
+		this.project = project;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.creationDate = creationDate;
+		this.updateDate = updateDate;
+		this.status = status;
 	}
 
 	/**
-	 * @return the nbIdExperience
+	 * @return the idExperience
 	 */
-	public Integer getNbIdExperience() {
-		return nbIdExperience;
+	public Integer getIdExperience() {
+		return idExperience;
 	}
 
 	/**
-	 * @param nbIdExperience
-	 *            the nbIdExperience to set
+	 * @param idExperience
+	 *            the idExperience to set
 	 */
-	public void setNbIdExperience(Integer nbIdExperience) {
-		this.nbIdExperience = nbIdExperience;
+	public void setIdExperience(Integer idExperience) {
+		this.idExperience = idExperience;
 	}
 
 	/**
-	 * @return the txCompany
+	 * @return the company
 	 */
-	public String getTxCompany() {
-		return txCompany;
+	public String getCompany() {
+		return company;
 	}
 
 	/**
-	 * @param txCompany
-	 *            the txCompany to set
+	 * @param company
+	 *            the company to set
 	 */
-	public void setTxCompany(String txCompany) {
-		this.txCompany = txCompany;
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 	/**
-	 * @return the txProject
+	 * @return the project
 	 */
-	public String getTxProject() {
-		return txProject;
+	public String getProject() {
+		return project;
 	}
 
 	/**
-	 * @param txProject
-	 *            the txProject to set
+	 * @param project
+	 *            the project to set
 	 */
-	public void setTxProject(String txProject) {
-		this.txProject = txProject;
+	public void setProject(String project) {
+		this.project = project;
 	}
 
 	/**
-	 * @return the dtStartDate
+	 * @return the startDate
 	 */
-	public Date getDtStartDate() {
-		return dtStartDate;
+	public Date getStartDate() {
+		return startDate;
 	}
 
 	/**
-	 * @param dtStartDate
-	 *            the dtStartDate to set
+	 * @param startDate
+	 *            the startDate to set
 	 */
-	public void setDtStartDate(Date dtStartDate) {
-		this.dtStartDate = dtStartDate;
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
 
 	/**
-	 * @return the dtEndDate
+	 * @return the endDate
 	 */
-	public Date getDtEndDate() {
-		return dtEndDate;
+	public Date getEndDate() {
+		return endDate;
 	}
 
 	/**
-	 * @param dtEndDate
-	 *            the dtEndDate to set
+	 * @param endDate
+	 *            the endDate to set
 	 */
-	public void setDtEndDate(Date dtEndDate) {
-		this.dtEndDate = dtEndDate;
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 
 	/**
-	 * @return the dtCreationDate
+	 * @return the creationDate
 	 */
-	public Date getDtCreationDate() {
-		return dtCreationDate;
+	public Date getCreationDate() {
+		return creationDate;
 	}
 
 	/**
-	 * @param dtCreationDate
-	 *            the dtCreationDate to set
+	 * @param creationDate
+	 *            the creationDate to set
 	 */
-	public void setDtCreationDate(Date dtCreationDate) {
-		this.dtCreationDate = dtCreationDate;
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 
 	/**
-	 * @return the dtUpdateDate
+	 * @return the updateDate
 	 */
-	public Date getDtUpdateDate() {
-		return dtUpdateDate;
+	public Date getUpdateDate() {
+		return updateDate;
 	}
 
 	/**
-	 * @param dtUpdateDate
-	 *            the dtUpdateDate to set
+	 * @param updateDate
+	 *            the updateDate to set
 	 */
-	public void setDtUpdateDate(Date dtUpdateDate) {
-		this.dtUpdateDate = dtUpdateDate;
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
 	}
 
 	/**
-	 * @return the nbStatus
+	 * @return the status
 	 */
-	public Integer getNbStatus() {
-		return nbStatus;
+	public Integer getStatus() {
+		return status;
 	}
 
 	/**
-	 * @param nbStatus
-	 *            the nbStatus to set
+	 * @param status
+	 *            the status to set
 	 */
-	public void setNbStatus(Integer nbStatus) {
-		this.nbStatus = nbStatus;
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return the profile
+	 */
+	public Profile getProfile() {
+		return profile;
+	}
+
+	/**
+	 * @param profile
+	 *            the profile to set
+	 */
+	public void setProfile(Profile profile) {
+		this.profile = profile;
 	}
 
 }

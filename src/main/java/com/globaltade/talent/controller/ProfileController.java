@@ -14,40 +14,41 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.globaltade.talent.dominio.User;
 import com.globaltade.talent.enums.ErrorUserT;
-import com.globaltade.talent.service.IUserService;
+import com.globaltade.talent.service.IProfileService;
+import com.globaltade.talent.transaction.TransactionProfile;
 import com.globaltade.talent.transaction.TransactionUser;
 
 @RestController
-public class UserController {
+public class ProfileController {
 
 	@Autowired
-	IUserService userService;
+	IProfileService profileService;
 
 	/**
-	 * Retrieve All Users
+	 * Retrieve All Profiles
 	 * **/
-	@RequestMapping(value = "/user/", method = RequestMethod.GET)
-	public ResponseEntity<TransactionUser> getAllUsers() {
-		TransactionUser users = userService.getAllUser();
-		return new ResponseEntity<TransactionUser>(users, HttpStatus.OK);
+	@RequestMapping(value = "/profiles/", method = RequestMethod.GET)
+	public ResponseEntity<TransactionProfile> getAllProfiles() {
+		TransactionProfile users = profileService.readProfiles(new TransactionProfile());
+		return new ResponseEntity<TransactionProfile>(users, HttpStatus.OK);
 	}
 	
 	/**
-	 * Retrieve Single User
+	 * Retrieve Single Profile by Id
 	 * **/
-	@RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<TransactionUser> getUser(@PathVariable("id") Integer idUser) {
-		TransactionUser transactionuser = new TransactionUser();
+	@RequestMapping(value = "/profiles/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TransactionProfile> getProfileById(@PathVariable("id") Integer idUser) {
+		TransactionProfile transactionuser = new TransactionProfile();
 		transactionuser.setUser(new User(idUser));
-		transactionuser = userService.getUserById(transactionuser);
-		return new ResponseEntity<TransactionUser>(transactionuser, HttpStatus.OK);
+		transactionuser = profileService.getProfileByProfileId(transactionuser);
+		return new ResponseEntity<TransactionProfile>(transactionuser, HttpStatus.OK);
 	}
 
 	/**
-	 * Create a User
+	 * Create a new Profile
 	 * **/
-	@RequestMapping(value = "/user/", method = RequestMethod.POST)
-	public ResponseEntity<Void> createUser(@RequestBody User user,   UriComponentsBuilder ucBuilder) {
+	@RequestMapping(value = "/profiles/", method = RequestMethod.POST)
+	public ResponseEntity<Void> createProfile(@RequestBody User user,   UriComponentsBuilder ucBuilder) {
 		TransactionUser transactionuser = new TransactionUser(user);
 		transactionuser = userService.saveUser(transactionuser);
 		if (!ErrorUserT.USERSUCCES_QUERY_PERSISTUSERSRESULT.getErrorCode().equals(transactionuser.getResponseCode())) {
@@ -60,20 +61,20 @@ public class UserController {
 	}
 
 	/**
-	 * Update a User
+	 * Update a Profile
 	 * **/
-	@RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<TransactionUser> updateUser(@RequestBody User user) {
+	@RequestMapping(value = "/profiles/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<TransactionUser> updateProfile(@RequestBody User user) {
 		TransactionUser transactionuser = new TransactionUser(user);
 		transactionuser = userService.updateUser(transactionuser);
 		return new ResponseEntity<TransactionUser>(transactionuser, HttpStatus.OK);
 	}
 	
 	/**
-	 * Delete a User
+	 * Delete a Profile
 	 * **/
-	@RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<TransactionUser> deleteUser(@PathVariable("id") Integer idUser) {
+	@RequestMapping(value = "/profiles/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<TransactionUser> deleteProfile(@PathVariable("id") Integer idUser) {
 		TransactionUser transactionuser = new TransactionUser();
 		transactionuser.setUser(new User(idUser));
 		transactionuser = userService.deleteUser(transactionuser);
