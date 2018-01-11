@@ -1,13 +1,13 @@
 package com.globaltade.talent.exception;
 
-public class AdressException extends Exception {
+public class BusinessException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
 	private String errorCode;
 	private String descriptionCode;
 
-	public AdressException(String errorCode, String descriptionCode) {
+	public BusinessException(String errorCode, String descriptionCode) {
 		this.errorCode = errorCode;
 		this.descriptionCode = descriptionCode;
 	}

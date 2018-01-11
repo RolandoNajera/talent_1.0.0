@@ -2,7 +2,7 @@ package com.globaltade.talent.enums;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.globaltade.talent.exception.UserException;
+import com.globaltade.talent.exception.BusinessException;
 
 public enum ErrorUserT {
 	
@@ -26,29 +26,29 @@ public enum ErrorUserT {
 	
 	;
 	
-	String errorCode;
-	String errorDescription;
+	String code;
+	String description;
 	
-	public String getErrorCode() {
-		return errorCode;
+	public String getCode() {
+		return code;
 	}
 	
-	public String getErrorDescription() {
-		return errorDescription;
+	public String getDescription() {
+		return description;
 	}
 	
-	ErrorUserT(String errorCode, String errorDescription) {
-		this.errorCode = errorCode;
-		this.errorDescription = errorDescription;
+	ErrorUserT(String code, String description) {
+		this.code = code;
+		this.description = description;
 	}
 	
-	public UserException buildUserException() {
+	public BusinessException buildUserException() {
 		return buildUSerException(null);
 	}
 	
-	public UserException buildUSerException(String msg) {
+	public BusinessException buildUSerException(String msg) {
 		String nueva = StringUtils.defaultIfEmpty(msg, "");
-		return new UserException(errorCode,errorDescription + " : " + nueva);
+		return new BusinessException(code,description + " : " + nueva);
 	}
 	
 }

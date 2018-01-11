@@ -6,12 +6,14 @@ public interface IProfileService {
 
 	TransactionProfile createProfile(TransactionProfile transactionProfileRequest);
 	
-	TransactionProfile updateProfileByProfileId(TransactionProfile transactionProfileRequest);
+	TransactionProfile updateProfile(TransactionProfile transactionProfileRequest);
 
-	TransactionProfile removeProfileByProfileId(TransactionProfile transactionProfileRequest);
+	TransactionProfile removeProfile(TransactionProfile transactionProfileRequest);
 	
-	TransactionProfile getProfileByProfileId(TransactionProfile transactionProfileRequest);
+	TransactionProfile getProfile(TransactionProfile transactionProfileRequest);
 	
-	TransactionProfile readProfiles(TransactionProfile transactionProfileRequest);
+	TransactionProfile readProfiles();
+	
+	TransactionProfile getIdProfile(TransactionProfile transactionProfile);
 	
 }

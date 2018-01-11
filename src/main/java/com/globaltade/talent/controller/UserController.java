@@ -50,7 +50,7 @@ public class UserController {
 	public ResponseEntity<Void> createUser(@RequestBody User user,   UriComponentsBuilder ucBuilder) {
 		TransactionUser transactionuser = new TransactionUser(user);
 		transactionuser = userService.saveUser(transactionuser);
-		if (!ErrorUserT.USERSUCCES_QUERY_PERSISTUSERSRESULT.getErrorCode().equals(transactionuser.getResponseCode())) {
+		if (!ErrorUserT.USERSUCCES_QUERY_PERSISTUSERSRESULT.getCode().equals(transactionuser.getResponseCode())) {
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
 		transactionuser = userService.saveUser(transactionuser);

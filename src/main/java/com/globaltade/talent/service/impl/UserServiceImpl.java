@@ -11,7 +11,7 @@ import com.globaltade.talent.dao.IUserDao;
 import com.globaltade.talent.dominio.User;
 import com.globaltade.talent.enums.ErrorUserT;
 import com.globaltade.talent.exception.PersistenceException;
-import com.globaltade.talent.exception.UserException;
+import com.globaltade.talent.exception.BusinessException;
 import com.globaltade.talent.service.IUserService;
 import com.globaltade.talent.transaction.TransactionUser;
 import com.globaltade.talent.utils.Constantes;
@@ -30,17 +30,17 @@ public class UserServiceImpl implements IUserService {
 		try {
 			List<User> listUsers = (List<User>) userDao.getAll();
 			if(listUsers == null || listUsers.isEmpty()) {
-				transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_EMPTYLISTUSERRESULT.getErrorCode());
-				transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_EMPTYLISTUSERRESULT.getErrorDescription());
+				transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_EMPTYLISTUSERRESULT.getCode());
+				transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_EMPTYLISTUSERRESULT.getDescription());
 				transactionUser.setTotalResult(Constantes.CONSULTA_TOTALVACIO);
 			}else {
 				transactionUser.setListUser(listUsers);
-				transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_LISTUSERRESULT.getErrorCode());
-				transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_LISTUSERRESULT.getErrorDescription());
+				transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_LISTUSERRESULT.getCode());
+				transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_LISTUSERRESULT.getDescription());
 				transactionUser.setTotalResult(listUsers.size());
 			}
 		} catch (PersistenceException spe) {
-			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getErrorCode());
+			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getCode());
 			transactionUser.setDescriptionCode(spe.getMessage());
 		}
 		return transactionUser;
@@ -51,19 +51,19 @@ public class UserServiceImpl implements IUserService {
 			UserValidator.validateUserById(transactionUser.getUser());
 			User userdb = userDao.getById(transactionUser.getUser().getIdUser());
 			if(userdb == null) {
-				transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_EMPTYUSERRESULT.getErrorCode());
-				transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_EMPTYUSERRESULT.getErrorDescription());
+				transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_EMPTYUSERRESULT.getCode());
+				transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_EMPTYUSERRESULT.getDescription());
 				transactionUser.setTotalResult(Constantes.CONSULTA_TOTALVACIO);
 			}else {
 				transactionUser.setUser(userdb);
-				transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_USERRESULT.getErrorCode());
-				transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_USERRESULT.getErrorDescription());
+				transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_USERRESULT.getCode());
+				transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_USERRESULT.getDescription());
 				transactionUser.setTotalResult(Constantes.NUMERO_UNO);
 			}
 		} catch (PersistenceException spe) {
-			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getErrorCode());
+			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getCode());
 			transactionUser.setDescriptionCode(spe.getMessage());
-		} catch(UserException ue) {
+		} catch(BusinessException ue) {
 			transactionUser.setResponseCode(ue.getErrorCode());
 			transactionUser.setDescriptionCode(ue.getDescriptionCode());
 		}
@@ -80,13 +80,13 @@ public class UserServiceImpl implements IUserService {
 			transactionUser.getUser().setStatus(Constantes.STATUS_ACTIVE);
 			userDao.persist(transactionUser.getUser());
 			transactionUser.setUser(transactionUser.getUser());
-			transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_PERSISTUSERSRESULT.getErrorCode());
-			transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_PERSISTUSERSRESULT.getErrorDescription());
+			transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_PERSISTUSERSRESULT.getCode());
+			transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_PERSISTUSERSRESULT.getDescription());
 			transactionUser.setTotalResult(Constantes.NUMERO_UNO);
 		} catch (PersistenceException spe) {
-			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getErrorCode());
+			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getCode());
 			transactionUser.setDescriptionCode(spe.getMessage());
-		} catch(UserException ue) {
+		} catch(BusinessException ue) {
 			transactionUser.setResponseCode(ue.getErrorCode());
 			transactionUser.setDescriptionCode(ue.getDescriptionCode());
 		}
@@ -104,13 +104,13 @@ public class UserServiceImpl implements IUserService {
 			transactionUser.getUser().setUpdateDate(new Date());
 			userDao.update(transactionUser.getUser());
 			transactionUser.setUser(transactionUser.getUser());
-			transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_UPDATEUSERSRESULT.getErrorCode());
-			transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_UPDATEUSERSRESULT.getErrorDescription());
+			transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_UPDATEUSERSRESULT.getCode());
+			transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_UPDATEUSERSRESULT.getDescription());
 			transactionUser.setTotalResult(Constantes.NUMERO_UNO);
 		} catch (PersistenceException spe) {
-			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getErrorCode());
+			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getCode());
 			transactionUser.setDescriptionCode(spe.getMessage());
-		} catch(UserException ue) {
+		} catch(BusinessException ue) {
 			transactionUser.setResponseCode(ue.getErrorCode());
 			transactionUser.setDescriptionCode(ue.getDescriptionCode());
 		}
@@ -128,13 +128,13 @@ public class UserServiceImpl implements IUserService {
 			transactionUser.getUser().setStatus(Constantes.STATUS_INACTIVE);
 			userDao.update(transactionUser.getUser());
 			transactionUser.setUser(transactionUser.getUser());
-			transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_DELETEUSERSRESULT.getErrorCode());
-			transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_DELETEUSERSRESULT.getErrorDescription());
+			transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_DELETEUSERSRESULT.getCode());
+			transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_DELETEUSERSRESULT.getDescription());
 			transactionUser.setTotalResult(Constantes.NUMERO_UNO);
 		} catch (PersistenceException spe) {
-			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getErrorCode());
+			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getCode());
 			transactionUser.setDescriptionCode(spe.getMessage());
-		} catch(UserException ue) {
+		} catch(BusinessException ue) {
 			transactionUser.setResponseCode(ue.getErrorCode());
 			transactionUser.setDescriptionCode(ue.getDescriptionCode());
 		}
@@ -152,9 +152,9 @@ public class UserServiceImpl implements IUserService {
 				transactionUser.setExist(Constantes.ISUNIQUE_TRUE);
 			}
 		} catch (PersistenceException spe) {
-			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getErrorCode());
+			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getCode());
 			transactionUser.setDescriptionCode(spe.getMessage());
-		} catch(UserException ue) {
+		} catch(BusinessException ue) {
 			transactionUser.setResponseCode(ue.getErrorCode());
 			transactionUser.setDescriptionCode(ue.getDescriptionCode());
 		}
