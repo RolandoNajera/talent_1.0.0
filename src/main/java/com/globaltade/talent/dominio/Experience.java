@@ -21,7 +21,7 @@ public class Experience {
 	@Id
 	@GenericGenerator(name = "genExperience", strategy = "increment")
 	@GeneratedValue(generator = "genExperience")
-	@Column(name = "id")
+	@Column(name = "idExperience")
 	private Integer idExperience;
 
 	@Column(name = "company")
@@ -54,7 +54,7 @@ public class Experience {
 	private Integer status;
 
 	@ManyToOne
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "idProfile")
 	private Profile profile;
 
 	public Experience() {

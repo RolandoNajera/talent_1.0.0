@@ -27,7 +27,7 @@ public class Profile {
 	@Id
 	@GenericGenerator(name = "genProfile", strategy = "increment")
 	@GeneratedValue(generator = "genProfile")
-	@Column(name = "id")
+	@Column(name = "idProfile")
 	private Integer idProfile;
 
 	@NotNull
@@ -109,12 +109,12 @@ public class Profile {
 	private Integer status;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "idExperience")
 	@OrderBy
 	private Set<Experience> experiences;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "idAbility")
 	@OrderBy
 	private Set<Ability> abilities;
 

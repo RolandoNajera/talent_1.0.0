@@ -15,14 +15,14 @@ import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@Table(name = "Cat_Ability")
+@Table(name = "Ability")
 public class Ability {
 
 	@Id
 	@GenericGenerator(name = "genAbility", strategy = "increment")
 	@GeneratedValue(generator = "genAbility")
-	@Column(name = "id")
-	private Integer id;
+	@Column(name = "idAbility")
+	private Integer idAbility;
 
 	@Column(name = "name")
 	private String name;
@@ -47,7 +47,7 @@ public class Ability {
 	private Integer status;
 
 	@ManyToOne
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "idProfile")
 	private Profile profile;
 
 	public Ability() {
@@ -63,10 +63,10 @@ public class Ability {
 	 * @param updateDate
 	 * @param status
 	 */
-	public Ability(Integer id, String name, String description, String type, Date creationDate, Date updateDate,
+	public Ability(Integer idAbility, String name, String description, String type, Date creationDate, Date updateDate,
 			Integer status) {
 		super();
-		this.id = id;
+		this.idAbility = idAbility;
 		this.name = name;
 		this.description = description;
 		this.type = type;
@@ -78,16 +78,16 @@ public class Ability {
 	/**
 	 * @return the id
 	 */
-	public Integer getId() {
-		return id;
+	public Integer getIdAbility() {
+		return idAbility;
 	}
 
 	/**
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(Integer id) {
-		this.id = id;
+	public void setIdAbility(Integer idAbility) {
+		this.idAbility = idAbility;
 	}
 
 	/**

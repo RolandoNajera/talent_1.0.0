@@ -1,17 +1,18 @@
 package com.globaltade.talent.service.impl;
 
 import java.util.Date;
-import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.globaltade.talent.dao.IUserDao;
 import com.globaltade.talent.dominio.User;
-import com.globaltade.talent.enums.ErrorUserT;
-import com.globaltade.talent.exception.PersistenceException;
+import com.globaltade.talent.enums.CodeProfileT;
+import com.globaltade.talent.enums.CodeUserT;
 import com.globaltade.talent.exception.BusinessException;
+import com.globaltade.talent.exception.PersistenceException;
 import com.globaltade.talent.service.IUserService;
 import com.globaltade.talent.transaction.TransactionUser;
 import com.globaltade.talent.utils.Constantes;
@@ -24,115 +25,66 @@ public class UserServiceImpl implements IUserService {
 	@Autowired
 	private IUserDao userDao;
 
-	@SuppressWarnings("unchecked")
-	public TransactionUser getAllUser() {
-		TransactionUser transactionUser = new TransactionUser(); 
+	public TransactionUser createUser(TransactionUser transactionUserRequest) {
 		try {
-			List<User> listUsers = (List<User>) userDao.getAll();
-			if(listUsers == null || listUsers.isEmpty()) {
-				transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_EMPTYLISTUSERRESULT.getCode());
-				transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_EMPTYLISTUSERRESULT.getDescription());
-				transactionUser.setTotalResult(Constantes.CONSULTA_TOTALVACIO);
+			UserValidator.validateUser(transactionUserRequest.getUser());
+			this.getIdUser(transactionUserRequest);
+			transactionUserRequest.getUser().setStatus(Constantes.STATUS_ACTIVE);
+			if(transactionUserRequest.isExist()) {
+				this.userDao.update(transactionUserRequest.getUser());
 			}else {
-				transactionUser.setListUser(listUsers);
-				transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_LISTUSERRESULT.getCode());
-				transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_LISTUSERRESULT.getDescription());
-				transactionUser.setTotalResult(listUsers.size());
+				this.userDao.persist(transactionUserRequest.getUser());
 			}
+			transactionUserRequest.setUser(transactionUserRequest.getUser());
+			transactionUserRequest.setResponseCode(CodeUserT.SUS_QUERY_REGISTER.getCode());
+			transactionUserRequest.setDescriptionCode(CodeUserT.SUS_QUERY_REGISTER.getDescription());
 		} catch (PersistenceException spe) {
-			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getCode());
-			transactionUser.setDescriptionCode(spe.getMessage());
-		}
-		return transactionUser;
-	}
-
-	public TransactionUser getUserById(TransactionUser transactionUser) {
-		try {
-			UserValidator.validateUserById(transactionUser.getUser());
-			User userdb = userDao.getById(transactionUser.getUser().getIdUser());
-			if(userdb == null) {
-				transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_EMPTYUSERRESULT.getCode());
-				transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_EMPTYUSERRESULT.getDescription());
-				transactionUser.setTotalResult(Constantes.CONSULTA_TOTALVACIO);
-			}else {
-				transactionUser.setUser(userdb);
-				transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_USERRESULT.getCode());
-				transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_USERRESULT.getDescription());
-				transactionUser.setTotalResult(Constantes.NUMERO_UNO);
-			}
-		} catch (PersistenceException spe) {
-			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getCode());
-			transactionUser.setDescriptionCode(spe.getMessage());
+			transactionUserRequest.setResponseCode(CodeUserT.XUS_PERSISTENCE.getCode());
+			transactionUserRequest.setDescriptionCode(spe.getMessage());
 		} catch(BusinessException ue) {
-			transactionUser.setResponseCode(ue.getErrorCode());
-			transactionUser.setDescriptionCode(ue.getDescriptionCode());
+			transactionUserRequest.setResponseCode(ue.getErrorCode());
+			transactionUserRequest.setDescriptionCode(ue.getDescriptionCode());
 		}
-		return transactionUser;
-	}
-
-	public TransactionUser saveUser(TransactionUser transactionUser) {
-		try {
-			UserValidator.validateSaveUser(transactionUser.getUser());
-			transactionUser = userExist(transactionUser);
-			if(transactionUser.isExist()) {
-				throw ErrorUserT.USERERROR_QUERY_USERINSYSTEM.buildUserException();
-			}
-			transactionUser.getUser().setStatus(Constantes.STATUS_ACTIVE);
-			userDao.persist(transactionUser.getUser());
-			transactionUser.setUser(transactionUser.getUser());
-			transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_PERSISTUSERSRESULT.getCode());
-			transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_PERSISTUSERSRESULT.getDescription());
-			transactionUser.setTotalResult(Constantes.NUMERO_UNO);
-		} catch (PersistenceException spe) {
-			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getCode());
-			transactionUser.setDescriptionCode(spe.getMessage());
-		} catch(BusinessException ue) {
-			transactionUser.setResponseCode(ue.getErrorCode());
-			transactionUser.setDescriptionCode(ue.getDescriptionCode());
-		}
-		return transactionUser;
+		return transactionUserRequest;
 	}
 
 	@Override
-	public TransactionUser updateUser(TransactionUser transactionUser) {
+	public TransactionUser updateUser(TransactionUser transactionUserRequest) {
 		try {
-			UserValidator.validateSaveUser(transactionUser.getUser());
-			transactionUser = userExist(transactionUser);
-			if(transactionUser.isExist()) {
-				ErrorUserT.USERERROR_QUERY_NOTUSER.buildUserException();
+			UserValidator.validateUser(transactionUserRequest.getUser());
+			this.getUser(transactionUserRequest);
+			if(transactionUserRequest.isExist()) {
+				throw CodeUserT.SUS_QUERY_FIND.buildUserException();
 			}
-			transactionUser.getUser().setUpdateDate(new Date());
-			userDao.update(transactionUser.getUser());
-			transactionUser.setUser(transactionUser.getUser());
-			transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_UPDATEUSERSRESULT.getCode());
-			transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_UPDATEUSERSRESULT.getDescription());
-			transactionUser.setTotalResult(Constantes.NUMERO_UNO);
+			transactionUserRequest.getUser().setUpdateDate(new Date());
+			userDao.update(transactionUserRequest.getUser());
+			transactionUserRequest.setUser(transactionUserRequest.getUser());
+			transactionUserRequest.setResponseCode(CodeUserT.SUS_QUERY_UPDATE.getCode());
+			transactionUserRequest.setDescriptionCode(CodeUserT.SUS_QUERY_UPDATE.getDescription());
 		} catch (PersistenceException spe) {
-			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getCode());
-			transactionUser.setDescriptionCode(spe.getMessage());
+			transactionUserRequest.setResponseCode(CodeUserT.XUS_PERSISTENCE.getCode());
+			transactionUserRequest.setDescriptionCode(spe.getMessage());
 		} catch(BusinessException ue) {
-			transactionUser.setResponseCode(ue.getErrorCode());
-			transactionUser.setDescriptionCode(ue.getDescriptionCode());
+			transactionUserRequest.setResponseCode(ue.getErrorCode());
+			transactionUserRequest.setDescriptionCode(ue.getDescriptionCode());
 		}
-		return transactionUser;
+		return transactionUserRequest;
 	}
 
 	public TransactionUser deleteUser(TransactionUser transactionUser) {
 		try {
-			UserValidator.validateSaveUser(transactionUser.getUser());
-			transactionUser = userExist(transactionUser);
+			this.getIdUser(transactionUser);
 			if(transactionUser.isExist()) {
-				ErrorUserT.USERERROR_QUERY_NOTUSER.buildUserException();
+				throw CodeUserT.SUS_QUERY_FIND.buildUserException();
 			}
 			transactionUser.getUser().setUpdateDate(new Date());
 			transactionUser.getUser().setStatus(Constantes.STATUS_INACTIVE);
 			userDao.update(transactionUser.getUser());
 			transactionUser.setUser(transactionUser.getUser());
-			transactionUser.setResponseCode(ErrorUserT.USERSUCCES_QUERY_DELETEUSERSRESULT.getCode());
-			transactionUser.setDescriptionCode(ErrorUserT.USERSUCCES_QUERY_DELETEUSERSRESULT.getDescription());
-			transactionUser.setTotalResult(Constantes.NUMERO_UNO);
+			transactionUser.setResponseCode(CodeUserT.SUS_QUERY_DELETE.getCode());
+			transactionUser.setDescriptionCode(CodeUserT.SUS_QUERY_DELETE.getDescription());
 		} catch (PersistenceException spe) {
-			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getCode());
+			transactionUser.setResponseCode(CodeUserT.XUS_PERSISTENCE.getCode());
 			transactionUser.setDescriptionCode(spe.getMessage());
 		} catch(BusinessException ue) {
 			transactionUser.setResponseCode(ue.getErrorCode());
@@ -142,23 +94,57 @@ public class UserServiceImpl implements IUserService {
 	}
 	
 	@Override
-	public TransactionUser userExist(TransactionUser transactionUser) {
+	public TransactionUser getUser(TransactionUser transactionUserRequest) {
 		try {
-			UserValidator.validateUserUnique(transactionUser.getUser());
-			User userDb = userDao.getUserByMail(transactionUser.getUser().getMail());
-			if(userDb == null) {
-				transactionUser.setExist(Constantes.ISUNIQUE_FALSE);
+			UserValidator.validateUser(transactionUserRequest.getUser());
+			final User userDB = StringUtils.isNotBlank(transactionUserRequest.getUser().getMail())
+					? userDao.getUserByMail(transactionUserRequest.getUser().getMail())
+					: userDao.getUserByPhone(transactionUserRequest.getUser().getPhone());
+			if(userDB == null) {
+				transactionUserRequest.setResponseCode(CodeProfileT.SPR_QUERY_NOTFIND.getCode());
+				transactionUserRequest.setDescriptionCode(CodeProfileT.SPR_QUERY_NOTFIND.getDescription());
+				transactionUserRequest.setExist(false);
 			}else {
-				transactionUser.setExist(Constantes.ISUNIQUE_TRUE);
+				transactionUserRequest.setUser(userDB);;
+				transactionUserRequest.setResponseCode(CodeProfileT.SPR_QUERY_FIND.getCode());
+				transactionUserRequest.setDescriptionCode(CodeProfileT.SPR_QUERY_FIND.getDescription());
+				transactionUserRequest.setExist(true);
 			}
 		} catch (PersistenceException spe) {
-			transactionUser.setResponseCode(ErrorUserT.USERERROR_PERSISTANCE_USEREXCEPTION.getCode());
-			transactionUser.setDescriptionCode(spe.getMessage());
+			transactionUserRequest.setResponseCode(CodeUserT.XUS_PERSISTENCE.getCode());
+			transactionUserRequest.setDescriptionCode(spe.getMessage());
 		} catch(BusinessException ue) {
-			transactionUser.setResponseCode(ue.getErrorCode());
-			transactionUser.setDescriptionCode(ue.getDescriptionCode());
+			transactionUserRequest.setResponseCode(ue.getErrorCode());
+			transactionUserRequest.setDescriptionCode(ue.getDescriptionCode());
 		}
-		return transactionUser;
+		return transactionUserRequest;
+	}
+	
+	@Override
+	public TransactionUser getIdUser(TransactionUser transactionUserRequest) {
+		try {
+			UserValidator.validateUserKey(transactionUserRequest.getUser());
+			final User userDB = StringUtils.isNotBlank(transactionUserRequest.getUser().getMail())
+					? userDao.getUserByMail(transactionUserRequest.getUser().getMail())
+					: userDao.getUserByPhone(transactionUserRequest.getUser().getPhone());
+			if(userDB == null) {
+				transactionUserRequest.setResponseCode(CodeProfileT.SPR_QUERY_NOTFIND.getCode());
+				transactionUserRequest.setDescriptionCode(CodeProfileT.SPR_QUERY_NOTFIND.getDescription());
+				transactionUserRequest.setExist(false);
+			}else {
+				transactionUserRequest.getUser().setIdUser(userDB.getIdUser());
+				transactionUserRequest.setResponseCode(CodeProfileT.SPR_QUERY_FIND.getCode());
+				transactionUserRequest.setDescriptionCode(CodeProfileT.SPR_QUERY_FIND.getDescription());
+				transactionUserRequest.setExist(true);
+			}
+		} catch (PersistenceException spe) {
+			transactionUserRequest.setResponseCode(CodeUserT.XUS_PERSISTENCE.getCode());
+			transactionUserRequest.setDescriptionCode(spe.getMessage());
+		} catch(BusinessException ue) {
+			transactionUserRequest.setResponseCode(ue.getErrorCode());
+			transactionUserRequest.setDescriptionCode(ue.getDescriptionCode());
+		}
+		return transactionUserRequest;
 	}
 	
 }

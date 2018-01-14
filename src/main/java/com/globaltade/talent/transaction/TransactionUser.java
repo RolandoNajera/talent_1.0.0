@@ -1,14 +1,10 @@
 package com.globaltade.talent.transaction;
 
-import java.util.List;
-
 import com.globaltade.talent.dominio.User;
 
 public class TransactionUser {
 
 	private User user;
-	private List<User> listUser;
-	private Integer totalResult;
 	private String responseCode;
 	private String descriptionCode;
 	private boolean exist;
@@ -35,12 +31,9 @@ public class TransactionUser {
 	 * @param responseCode
 	 * @param descriptionCode
 	 */
-	public TransactionUser(User user, List<User> listUser, Integer totalResult, String responseCode,
-			String descriptionCode, boolean isUnique) {
+	public TransactionUser(User user, String responseCode, String descriptionCode, boolean isUnique) {
 		super();
 		this.user = user;
-		this.listUser = listUser;
-		this.totalResult = totalResult;
 		this.responseCode = responseCode;
 		this.descriptionCode = descriptionCode;
 		this.exist = isUnique;
@@ -59,36 +52,6 @@ public class TransactionUser {
 	 */
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	/**
-	 * @return the listUser
-	 */
-	public List<User> getListUser() {
-		return listUser;
-	}
-
-	/**
-	 * @param listUser
-	 *            the listUser to set
-	 */
-	public void setListUser(List<User> listUser) {
-		this.listUser = listUser;
-	}
-
-	/**
-	 * @return the totalResult
-	 */
-	public Integer getTotalResult() {
-		return totalResult;
-	}
-
-	/**
-	 * @param totalResult
-	 *            the totalResult to set
-	 */
-	public void setTotalResult(Integer totalResult) {
-		this.totalResult = totalResult;
 	}
 
 	/**

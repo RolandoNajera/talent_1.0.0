@@ -15,7 +15,7 @@ public class ProfileDaoImpl extends GenericDaoImpl<Profile, Integer> implements 
 		Profile profile = null;
 		try{
 			Criteria criteria = createEntityCriteria();
-			criteria.add(Restrictions.eq("phone", phone));
+			criteria.add(Restrictions.eq("firstPhone", phone));
 			profile = (Profile) criteria.uniqueResult();
 		}catch(Exception e){
 			throw new PersistenceException(e.getMessage());

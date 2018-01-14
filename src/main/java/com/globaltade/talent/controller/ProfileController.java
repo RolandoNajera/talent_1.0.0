@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.globaltade.talent.dominio.User;
-import com.globaltade.talent.enums.ErrorUserT;
+import com.globaltade.talent.dominio.Profile;
 import com.globaltade.talent.service.IProfileService;
 import com.globaltade.talent.transaction.TransactionProfile;
-import com.globaltade.talent.transaction.TransactionUser;
 
 @RestController
 public class ProfileController {
@@ -25,60 +23,54 @@ public class ProfileController {
 	IProfileService profileService;
 
 	/**
-	 * Retrieve All Profiles
-	 * **/
-	@RequestMapping(value = "/profiles/", method = RequestMethod.GET)
-	public ResponseEntity<TransactionProfile> getAllProfiles() {
-		TransactionProfile users = profileService.readProfiles(new TransactionProfile());
-		return new ResponseEntity<TransactionProfile>(users, HttpStatus.OK);
-	}
-	
-	/**
-	 * Retrieve Single Profile by Id
-	 * **/
-	@RequestMapping(value = "/profiles/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<TransactionProfile> getProfileById(@PathVariable("id") Integer idUser) {
-		TransactionProfile transactionuser = new TransactionProfile();
-		transactionuser.setUser(new User(idUser));
-		transactionuser = profileService.getProfileByProfileId(transactionuser);
-		return new ResponseEntity<TransactionProfile>(transactionuser, HttpStatus.OK);
-	}
-
-	/**
 	 * Create a new Profile
 	 * **/
-	@RequestMapping(value = "/profiles/", method = RequestMethod.POST)
-	public ResponseEntity<Void> createProfile(@RequestBody User user,   UriComponentsBuilder ucBuilder) {
-		TransactionUser transactionuser = new TransactionUser(user);
-		transactionuser = userService.saveUser(transactionuser);
-		if (!ErrorUserT.USERSUCCES_QUERY_PERSISTUSERSRESULT.getCode().equals(transactionuser.getResponseCode())) {
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-		}
-		transactionuser = userService.saveUser(transactionuser);
+	@RequestMapping(value = "/talents/", method = RequestMethod.POST)
+	public ResponseEntity<Void> createProfile(@RequestBody Profile profile,   UriComponentsBuilder ucBuilder) {
+		TransactionProfile transactionProfile = new TransactionProfile(profile);
+		profileService.createProfile(transactionProfile);
 		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/user/{id}").buildAndExpand(transactionuser.getUser().getIdUser()).toUri());
+		headers.setLocation(ucBuilder.path("/talents/{id}").buildAndExpand(transactionProfile.getProfile().getIdProfile()).toUri());
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
-
+	
 	/**
 	 * Update a Profile
 	 * **/
-	@RequestMapping(value = "/profiles/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<TransactionUser> updateProfile(@RequestBody User user) {
-		TransactionUser transactionuser = new TransactionUser(user);
-		transactionuser = userService.updateUser(transactionuser);
-		return new ResponseEntity<TransactionUser>(transactionuser, HttpStatus.OK);
+	@RequestMapping(value = "/talents/", method = RequestMethod.PUT)
+	public ResponseEntity<TransactionProfile> updateProfile(@RequestBody Profile profile) {
+		TransactionProfile transactionProfile = new TransactionProfile(profile);
+		profileService.updateProfile(transactionProfile);
+		return new ResponseEntity<TransactionProfile>(transactionProfile, HttpStatus.OK);
 	}
 	
 	/**
-	 * Delete a Profile
+	 * Retrieve All Profiles
 	 * **/
-	@RequestMapping(value = "/profiles/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<TransactionUser> deleteProfile(@PathVariable("id") Integer idUser) {
-		TransactionUser transactionuser = new TransactionUser();
-		transactionuser.setUser(new User(idUser));
-		transactionuser = userService.deleteUser(transactionuser);
-		return new ResponseEntity<TransactionUser>(transactionuser, HttpStatus.OK);
+	@RequestMapping(value = "/talents/", method = RequestMethod.GET)
+	public ResponseEntity<TransactionProfile> getAllProfiles() {
+		TransactionProfile transactionProfile = profileService.readProfiles();
+		return new ResponseEntity<TransactionProfile>(transactionProfile, HttpStatus.OK);
+	}
+	
+	/**
+	 * Retrieve Single talent by Id
+	 * **/
+	@RequestMapping(value = "/talents/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TransactionProfile> getProfileById(@PathVariable("id") Integer idProfile) {
+		TransactionProfile transactionProfile = new TransactionProfile(new Profile(idProfile));
+		profileService.getProfile(transactionProfile);
+		return new ResponseEntity<TransactionProfile>(transactionProfile, HttpStatus.OK);
+	}
+	
+	/**
+	 * Delete a talent
+	 * **/
+	@RequestMapping(value = "/talents/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<TransactionProfile> deleteProfile(@PathVariable("id") Integer idProfile) {
+		TransactionProfile transactionProfile = new TransactionProfile(new Profile(idProfile));
+		profileService.removeProfile(transactionProfile);
+		return new ResponseEntity<TransactionProfile>(transactionProfile, HttpStatus.OK);
 	}
 
 }

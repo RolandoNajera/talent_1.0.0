@@ -5,12 +5,8 @@ import com.globaltade.talent.exception.PersistenceException;
 
 public interface IUserDao extends IGenericDao<User, Integer> {
 	
-	User getUserByRfc(String rfc) throws PersistenceException;
-	
 	User getUserByPhone(String phone) throws PersistenceException;
 	
 	User getUserByMail(String mail) throws PersistenceException;
-	
-	void deleteUserById(Integer idUser) throws PersistenceException;
 	
 }

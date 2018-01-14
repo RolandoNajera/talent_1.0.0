@@ -55,8 +55,9 @@ public class ProfileServiceImpl implements IProfileService {
 			ProfileValidator.validateProfile(transactionProfile.getProfile());
 			this.getIdProfile(transactionProfile);
 			if(!transactionProfile.isExist()) {
-				CodeProfileT.SPR_QUERY_NOTFIND.buildUserException();
+				throw CodeProfileT.SPR_QUERY_NOTFIND.buildUserException();
 			}
+			transactionProfile.getProfile().setStatus(Constantes.STATUS_ACTIVE);
 			transactionProfile.getProfile().setUpdateDate(new Date());
 			profileDao.update(transactionProfile.getProfile());
 			transactionProfile.setProfile(transactionProfile.getProfile());
@@ -78,7 +79,7 @@ public class ProfileServiceImpl implements IProfileService {
 			ProfileValidator.validateProfileKey(transactionProfile.getProfile());
 			this.getProfile(transactionProfile);
 			if(!transactionProfile.isExist()) {
-				CodeProfileT.SPR_QUERY_NOTFIND.buildUserException();
+				throw CodeProfileT.SPR_QUERY_NOTFIND.buildUserException();
 			}
 			transactionProfile.getProfile().setUpdateDate(new Date());
 			transactionProfile.getProfile().setStatus(Constantes.STATUS_INACTIVE);
@@ -156,7 +157,8 @@ public class ProfileServiceImpl implements IProfileService {
 				transactionProfile.setTotalResult(Constantes.CONSULTA_TOTALVACIO);
 				transactionProfile.setExist(false);
 			}else {
-				transactionProfile.getProfile().setIdProfile(profileDB.getIdProfile());;
+				transactionProfile.getProfile().setIdProfile(profileDB.getIdProfile());
+				transactionProfile.getProfile().setStatus(profileDB.getStatus());
 				transactionProfile.setResponseCode(CodeProfileT.SPR_QUERY_FIND.getCode());
 				transactionProfile.setDescriptionCode(CodeProfileT.SPR_QUERY_FIND.getDescription());
 				transactionProfile.setTotalResult(Constantes.NUMERO_UNO);

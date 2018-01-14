@@ -13,7 +13,7 @@ public enum CodeProfileT {
 	SPR_QUERY_DELETE("SPR004","El perfil fue eliminado correctamente"),
 	SPR_QUERY_SELECT("SPR005","Cosutla exitosa"),
 	
-	XAD_PERSISTENCE("XAD000","Error de persistencia en transacción Dirección"),
+	XAD_PERSISTENCE("XAD000","Error de persistencia en transacción Perfil"),
 	
 	EPR_PARAM_REQUIRED("EPR001","Error por parametros requeridos"),
 	EPR_PARAM_FORMAT_PHONE("EPR002","Error de formato en el parámetro Teléfono"),

@@ -19,6 +19,14 @@ public class TransactionProfile {
 	public TransactionProfile() {
 		super();
 	}
+	
+	/**
+	 * 
+	 */
+	public TransactionProfile(Profile profile) {
+		super();
+		this.profile = profile;
+	}
 
 	/**
 	 * @param profile
